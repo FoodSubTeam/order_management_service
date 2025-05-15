@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-management-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-management-service
+  template:
+    metadata:
+      labels:
+        app: order-management-service
+    spec:
+      containers:
+        - name: order-management-service
+          image: order-management-service
+          ports:
+            - containerPort: 8000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: secrets
+                  key: database_url
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: kafka-service.kafka.svc.cluster.local:9092

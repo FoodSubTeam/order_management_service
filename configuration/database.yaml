@@ -1,0 +1,48 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-management-postgres
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: order-management-postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: order-management-postgres
+spec:
+  serviceName: "order-management-postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-management-postgres
+  template:
+    metadata:
+      labels:
+        app: order-management-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15
+          env:
+            - name: POSTGRES_USER
+              value: myuser
+            - name: POSTGRES_PASSWORD
+              value: mypassword
+            - name: POSTGRES_DB
+              value: order-management_db
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
