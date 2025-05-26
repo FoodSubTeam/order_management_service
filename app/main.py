@@ -20,11 +20,11 @@ async def on_startup():
     logging.getLogger("aiokafka").setLevel(logging.WARNING)
 
     # Create tables on startup
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
+    # async with engine.begin() as conn:
+    #     await conn.run_sync(Base.metadata.create_all)
 
     # Initialize all required topics for the service
-    # init_topics()
+    init_topics()
 
     # Consume messages from all subscribed topics
     asyncio.create_task(start_consumer())

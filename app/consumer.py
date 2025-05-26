@@ -2,6 +2,7 @@ from aiokafka import AIOKafkaConsumer
 import asyncio
 import json
 from app.kafka_message_handlers import handlers
+from app.topics import Topic
 import logging
 
 consumer = None
@@ -11,7 +12,8 @@ kafka_bootstrap_servers = 'kafka-service.kafka.svc.cluster.local:9092'
 async def start_consumer():
     global consumer
     consumer = AIOKafkaConsumer(
-        'offer.selected',
+        Topic.OFFER_SELECTED.value,
+        Topic.SUBSCRIPTION_PAID.value, 
         bootstrap_servers=kafka_bootstrap_servers,
         group_id="order-management-group"
     )
