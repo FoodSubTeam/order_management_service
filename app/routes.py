@@ -49,8 +49,28 @@ async def generate_kitchen_orders():
     return {"message": "Sent generate kitchen orders message", "offer_ids": offer_ids}
 
 
+# Generate delivery orders for the day
+#tu tworzymy o 8 rano delivery orders na dany dzień 
+@router.post("/delivery-orders-ready")
+async def delivery_orders_ready():
+    logging.warning("Generate delivery orders called.")
+    ready_orders=await service.get_ready_orders()
+    logging.warning(f"ready_orders={ready_orders}")
+
+    message = {
+       "type": MessageType.GENERATE_DELIVERY_ORDERS.value,
+       "data": ready_orders
+    }
+
+    KafkaProducerSingleton.produce_message(Topic.DELIVERY_ORDER.value, json.dumps(message))
+    logging.warning("Sent generate delivery orders message.")
+
+    return{"message": "Sent generate delivery orders message"}
+
+
 # Test endpoint
 @router.get("/order-management/test")
 async def test_order_management():
     logging.warning("order-management test hit")
     return {"message": "ok"}
+
