@@ -14,6 +14,8 @@ async def start_consumer():
     consumer = AIOKafkaConsumer(
         Topic.OFFER_SELECTED.value,
         Topic.SUBSCRIPTION_PAID.value, 
+        Topic.SUBSCRIPTION_CANCELED.value,
+        Topic.CANCEL_SUBSCRIPTION.value,
         bootstrap_servers=kafka_bootstrap_servers,
         group_id="order-management-group"
     )

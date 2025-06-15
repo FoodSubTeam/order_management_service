@@ -33,6 +33,6 @@ def setup_topic(topic_name: str):
 
 
 def init_topics():
-    required_topics = [Topic.KITCHEN_ORDER.value, Topic.OFFER_SELECTED.value, Topic.SUBSCRIPTION_PAID.value]
+    required_topics = [Topic.KITCHEN_ORDER.value, Topic.OFFER_SELECTED.value, Topic.SUBSCRIPTION_PAID.value, Topic.SUBSCRIPTION_CANCELED.value, Topic.CANCEL_SUBSCRIPTION.value]
     for topic in required_topics:
         setup_topic(topic)
