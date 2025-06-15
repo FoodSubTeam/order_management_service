@@ -16,7 +16,6 @@ class MessageType(Enum):
     OFFER_PAYMENT_FAILURE = "offer_payment_failure"
     MARK_SUBSCRIPTION_AS_PAYED = "mark_subscription_as_paid"
     MARK_SUBSCRIPTION_AS_CANCELED = "mark_subscription_as_cancelled"
-    GENERATE_KITCHEN_ORDERS = "generate_kitchen_orders"
     SUBSCRIPTION_CANCELED = "subscription_canceled"
     CANCEL_SUBSCRIPTION = "cancel_subscription"
     CANCEL_SUBSCRIPTION_REQUEST = "cancel_subscription_request"
