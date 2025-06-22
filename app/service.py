@@ -28,6 +28,25 @@ class OrderManagementService():
             raise HTTPException(status_code=502, detail=f"Network error: {e}")
         except:
             logging.warning("Some other error occured.")
+    
+
+    async def get_paid_subscriptions_for_kitchen(self, kitchen_id):
+        try:
+            async with httpx.AsyncClient() as client:
+                subscriptions = await client.get(f"{SUBSCRIPTION_SERVICE_URL}/subscriptions/paid/{kitchen_id}")
+                subscriptions.raise_for_status()
+                return subscriptions.json()
+        except httpx.HTTPStatusError as e:
+            logging.warning("HTTPStatusError occured.")
+            if e.response.status_code == 404:
+                logging.warning("Subscription service not found.")
+                raise HTTPException(status_code=404, detail="Subscription service not found")
+            raise HTTPException(status_code=502, detail="Subscription service error")
+        except httpx.RequestError as e:
+            logging.warning("RequestError occured.")
+            raise HTTPException(status_code=502, detail=f"Network error: {e}")
+        except:
+            logging.warning("Some other error occured.")
 
     
     async def fetch_offers(self, offer_ids):

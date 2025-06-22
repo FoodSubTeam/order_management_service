@@ -6,12 +6,11 @@ import json
 # Send message to Payment Service - request payment for subscription
 async def request_subscription_payment(data):
     # TODO: query user-service for customer_id
-    customer_id = "cus_S2ZmCvDwZYXCCE"
+    # customer_id = "cus_S2ZmCvDwZYXCCE"
     message = {
         "type": MessageType.REQUEST_SUBSCRIPTION_PAYMENT.value,
         "data": {
             "user_id": data.get("user_id"),
-            "customer_id": customer_id,
             "offer_id": data.get("offer_id"),
             "subscription_id": data.get("subscription_id"),
             "price_id": data.get("price_id")
@@ -55,10 +54,40 @@ async def handle_subscription_cancelled(data):
     logging.warning(f"Sent mark subscription as canceled request: {json.dumps(message)}")
 
 
+async def handle_add_new_customer_request(data):
+    message = {
+        "type": MessageType.REQUEST_ADD_NEW_CUSTOMER_METHOD.value,
+        "data": data
+    }
+    KafkaProducerSingleton.produce_message(Topic.SETUP_NEW_CUSTOMER.value, json.dumps(message))
+    logging.warning(f"Sent add new customer request: {json.dumps(message)}")
+
+
+async def handle_add_new_customer_success(data):
+    message = {
+        "type": MessageType.SETUP_NEW_CUSTOMER_SUCCESS.value,
+        "data": data
+    }
+    KafkaProducerSingleton.produce_message(Topic.SETUP_NEW_CUSTOMER_RESULT.value, json.dumps(message))
+    logging.warning(f"Add stripe customer success: {json.dumps(message)}")
+
+
+async def handle_add_new_customer_failure(data):
+    message = {
+        "type": MessageType.SETUP_NEW_CUSTOMER_FAILURE.value,
+        "data": data
+    }
+    KafkaProducerSingleton.produce_message(Topic.SETUP_NEW_CUSTOMER_RESULT.value, json.dumps(message))
+    logging.warning(f"Add stripe customer failure: {json.dumps(message)}")
+
+
 handlers = {
     MessageType.REQUEST_SUBSCRIPTION_PAYMENT.value: request_subscription_payment,
     MessageType.OFFER_PAYMENT_SUCCESSFUL.value: handle_payment_success,
     MessageType.OFFER_PAYMENT_FAILURE.value: handle_payment_failure,
     MessageType.SUBSCRIPTION_CANCELED.value: handle_subscription_cancelled,
-    MessageType.CANCEL_SUBSCRIPTION_REQUEST.value: request_cancel_subscription
+    MessageType.CANCEL_SUBSCRIPTION_REQUEST.value: request_cancel_subscription,
+    MessageType.SETUP_NEW_CUSTOMER_REQUEST.value: handle_add_new_customer_request,
+    MessageType.ADD_NEW_CUSTOMER_SUCCESS.value: handle_add_new_customer_success,
+    MessageType.ADD_NEW_CUSTOMER_FAILURE.value: handle_add_new_customer_failure
 }

@@ -16,6 +16,8 @@ async def start_consumer():
         Topic.SUBSCRIPTION_PAID.value, 
         Topic.SUBSCRIPTION_CANCELED.value,
         Topic.CANCEL_SUBSCRIPTION.value,
+        Topic.SETUP_NEW_CUSTOMER.value,
+        Topic.ADD_NEW_CUSTOMER_RESULT.value,
         bootstrap_servers=kafka_bootstrap_servers,
         group_id="order-management-group"
     )
